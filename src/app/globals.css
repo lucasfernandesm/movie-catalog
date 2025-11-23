@@ -6,9 +6,9 @@
 @theme inline {
   --color-navbar: #261C1E;
   --color-text: #F2EEEB;
-  --color-1: ##736A65;
-  --color-2: ##BFB2AA;
-  --color-3: ##BF6E50;
+  --color-textsecondary: #736A65;
+  --color-2: #BFB2AA;
+  --color-backgroundsecondary: #BF6E50;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -125,4 +125,5 @@
   body {
     @apply bg-background text-foreground;
   }
+  
 }
