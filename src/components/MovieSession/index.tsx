@@ -10,7 +10,7 @@ type MovieSessionProps = {
 
 export function MovieSession({ title, isLoading, movies }: MovieSessionProps) {
   return (
-    <main className="py-6">
+    <main className="max-w-7xl mx-auto px-6 py-8">
       <h1 className="text-navbar text-2xl font-medium mb-4">{title}</h1>
 
       <div className="relative min-h-[260px]">
