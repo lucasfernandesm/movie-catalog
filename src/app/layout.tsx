@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 import { NavBar } from "../components/NavBar";
 import { Footer } from "../components/Footer";
@@ -12,6 +12,18 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const poppins = Poppins({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  variable: "--font-poppins",
+});
+
+const roboto = Roboto({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-roboto",
 });
 
 export const metadata: Metadata = {
@@ -27,11 +39,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+        className={`${roboto.className} ${poppins.className} antialiased flex flex-col min-h-screen`}
         suppressHydrationWarning
       >
         <NavBar />
-        <main className="flex-1 w-full flex justify-center px-6 py-6">
+        <main className="flex-1 w-full flex justify-center px-6 pb-6">
           {children}
         </main>
         <Footer />

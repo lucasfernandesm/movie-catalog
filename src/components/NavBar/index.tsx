@@ -28,7 +28,7 @@ export function NavBar() {
   return (
     <header className="w-full bg-navbar shadow-md sticky top-0 z-50">
       <div className="max-w-6xl mx-auto flex items-center justify-between px-8 py-3">
-        <h1 className="text-xl font-bold text-text">🎬 Filmoteca</h1>
+        <h1 className="text-3xl font-bold text-text">🎬 Filmoteca</h1>
 
         <div className="flex items-center gap-4">
           <Button
