@@ -1,44 +1,81 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getPopularMovies, getTodayMovies } from "./actions";
+import { getPopularMovies, getTodayMovies, getWeekMovies } from "./actions";
 import { Movie } from "../types/movie";
 import { MovieSession } from "../components/MovieSession";
 
 export default function Home() {
+  const [popularType, setPopularType] = useState<
+    "streaming" | "on-tv" | "for-rent" | "in-theatres"
+  >("streaming");
   const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [todayMovies, setTodayMovies] = useState<Movie[]>([]);
-  const [isLoadingToday, setIsLoadingToday] = useState(true);
+  const [isLoadingPopular, setIsLoadingPopular] = useState(true);
 
-  useEffect(() => {
-    async function fetchPopularMovies() {
-      setIsLoading(true);
-      const data = await getPopularMovies();
-      if (data?.results) {
-        setPopularMovies(data.results);
-      }
-      setIsLoading(false);
+  const [trendType, setTrendType] = useState<"today" | "week">("today");
+  const [trendMovies, setTrendMovies] = useState<Movie[]>([]);
+  const [isLoadingTrends, setIsLoadingTrends] = useState(true);
+
+  const popularTabs = [
+    { label: "Streaming", value: "streaming" },
+    { label: "Na TV", value: "on-tv" },
+    { label: "Para alugar", value: "for-rent" },
+    { label: "Nos cinemas", value: "in-theatres" },
+  ];
+
+  async function loadPopularMovies(
+    type: "streaming" | "on-tv" | "for-rent" | "in-theatres"
+  ) {
+    setIsLoadingPopular(true);
+
+    let data;
+
+    switch (type) {
+      case "streaming":
+        data = await getPopularMovies("streaming");
+        break;
+      case "on-tv":
+        data = await getPopularMovies("on-tv");
+        break;
+      case "for-rent":
+        data = await getPopularMovies("for-rent");
+        break;
+      case "in-theatres":
+        data = await getPopularMovies("in-theatres");
+        break;
     }
 
-    fetchPopularMovies();
-  }, []);
+    if (data?.results) setPopularMovies(data.results);
+
+    setIsLoadingPopular(false);
+  }
 
   useEffect(() => {
-    async function fetchTodayMovies() {
-      setIsLoadingToday(true);
-      const data = await getTodayMovies();
-      if (data?.results) {
-        setTodayMovies(data.results);
-      }
-      setIsLoadingToday(false);
-    }
+    loadPopularMovies(popularType);
+  }, [popularType]);
 
-    fetchTodayMovies();
-  }, []);
+  const trendTabs = [
+    { label: "Hoje", value: "today" },
+    { label: "Semana", value: "week" },
+  ];
+
+  async function loadTrends(type: "today" | "week") {
+    setIsLoadingTrends(true);
+
+    const data =
+      type === "today" ? await getTodayMovies() : await getWeekMovies();
+
+    if (data?.results) setTrendMovies(data.results);
+
+    setIsLoadingTrends(false);
+  }
+
+  useEffect(() => {
+    loadTrends(trendType);
+  }, [trendType]);
 
   console.log("popularMovies", popularMovies);
-  console.log("todayMovies", todayMovies);
+  console.log("trendMovies", trendMovies);
 
   const backgroundcolor =
     "bg-linear-180 from-backgroundsecondary/0 via-backgroundsecondary/70 to-backgroundsecondary/0";
@@ -64,15 +101,23 @@ export default function Home() {
 
       <MovieSession
         title={"Mais populares"}
-        isLoading={isLoading}
+        isLoading={isLoadingPopular}
         movies={popularMovies}
+        options={popularTabs}
+        onOptionChange={(value) =>
+          setPopularType(
+            value as "streaming" | "on-tv" | "for-rent" | "in-theatres"
+          )
+        }
       />
 
       <MovieSession
         title="Tendências"
-        isLoading={isLoadingToday}
-        movies={todayMovies}
+        isLoading={isLoadingTrends}
+        movies={trendMovies}
         backgroundColor={backgroundcolor}
+        options={trendTabs}
+        onOptionChange={(value) => setTrendType(value as "today" | "week")}
       />
     </div>
   );

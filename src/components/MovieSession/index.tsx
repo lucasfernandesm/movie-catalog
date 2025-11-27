@@ -2,12 +2,20 @@ import { Movie } from "@/src/types/movie";
 import { MovieCard } from "../MovieCard";
 import { Loader } from "lucide-react";
 import { cn } from "@/src/lib/utils/utils";
+import { useState } from "react";
+
+type Option = {
+  label: string;
+  value: string;
+};
 
 type MovieSessionProps = {
   title: string;
   isLoading: boolean;
   movies: Movie[];
   backgroundColor?: string;
+  options?: Option[];
+  onOptionChange?: (value: string) => void;
 };
 
 export function MovieSession({
@@ -15,7 +23,16 @@ export function MovieSession({
   isLoading,
   movies,
   backgroundColor = "",
+  options = [],
+  onOptionChange,
 }: MovieSessionProps) {
+  const [selected, setSelected] = useState(options?.[0]?.value);
+
+  function handleSelect(value: string) {
+    setSelected(value);
+    onOptionChange?.(value);
+  }
+
   return (
     <div
       className={cn(
@@ -24,7 +41,28 @@ export function MovieSession({
       )}
     >
       <main className="max-w-7xl mx-auto px-6 py-8">
-        <h1 className="text-navbar text-2xl font-medium mb-4">{title}</h1>
+        <div className="flex items-center gap-10 mb-4">
+          <h1 className="text-navbar text-2xl font-medium">{title}</h1>
+
+          {options.length > 0 && (
+            <div className="flex gap-1 bg-backgroundsecondary/30 p-1 rounded-2xl">
+              {options.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => handleSelect(opt.value)}
+                  className={cn(
+                    "px-4 py-1 text-sm font-medium rounded-2xl transition-all duration-300",
+                    selected === opt.value
+                      ? "bg-navbar text-white shadow-md"
+                      : "text-navbar hover:bg-backgroundsecondary/50"
+                  )}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
 
         <div className="relative min-h-[260px]">
           {isLoading && (
